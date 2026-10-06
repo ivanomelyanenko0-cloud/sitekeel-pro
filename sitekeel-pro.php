@@ -79,6 +79,29 @@ if ( ! function_exists( 'skeelp_fs' ) ) {
 // --- END FREEMIUS INTEGRATION ---
 
 /**
+ * Uninstall cleanup goes through Freemius' after_uninstall hook instead of
+ * an uninstall.php file: when uninstall.php exists WordPress runs it in
+ * place of the SDK's own uninstall handler, so Freemius never learns about
+ * the uninstall. Builds without Freemius credentials have no SDK, so they
+ * register the cleanup as the plain uninstall hook on activation.
+ */
+function skeelp_uninstall_cleanup() {
+	require_once __DIR__ . '/includes/uninstall-cleanup.php';
+	skeelp_uninstall_all_sites();
+}
+
+if ( skeelp_fs() ) {
+	skeelp_fs()->add_action( 'after_uninstall', 'skeelp_uninstall_cleanup' );
+} else {
+	register_activation_hook(
+		__FILE__,
+		function () {
+			register_uninstall_hook( __FILE__, 'skeelp_uninstall_cleanup' );
+		}
+	);
+}
+
+/**
  * Pro features run only with a valid license or an active trial. Without
  * one, the free Sitekeel plugin keeps working and Pro's saved data stays in
  * place for when the license is active again. Development builds with the
