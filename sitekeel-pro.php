@@ -79,6 +79,19 @@ if ( ! function_exists( 'skeelp_fs' ) ) {
 // --- END FREEMIUS INTEGRATION ---
 
 /**
+ * Pro features run only with a valid license or an active trial. Without
+ * one, the free Sitekeel plugin keeps working and Pro's saved data stays in
+ * place for when the license is active again. Development builds with the
+ * Freemius credentials blanked out run unlicensed.
+ *
+ * @return bool
+ */
+function skeelp_is_licensed() {
+	$fs = skeelp_fs();
+	return null === $fs || $fs->can_use_premium_code();
+}
+
+/**
  * Pro is distributed through Freemius, not WordPress.org, so core's automatic
  * translation loading for wp.org-hosted plugins does not apply and the text
  * domain has to be loaded by hand.
@@ -92,7 +105,7 @@ add_action( 'init', 'skeelp_load_textdomain' );
  * Loads after the free plugin, whose functions everything here builds on.
  */
 function skeelp_boot() {
-	if ( ! defined( 'SKEEL_VERSION' ) ) {
+	if ( ! defined( 'SKEEL_VERSION' ) || ! skeelp_is_licensed() ) {
 		return;
 	}
 	require_once SKEELP_PLUGIN_DIR . 'includes/settings.php';
