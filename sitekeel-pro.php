@@ -26,12 +26,11 @@ define( 'SKEELP_PLUGIN_FILE', __FILE__ );
 define( 'SKEELP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 /**
- * Freemius product credentials. Create the product in the Freemius dashboard,
- * then paste its id and public key here; until both are set the SDK is not
- * started and the plugin runs unlicensed (development builds only).
+ * Freemius product credentials (public, safe to ship). Blanking either one
+ * skips the SDK and runs the plugin unlicensed, for local development builds.
  */
-define( 'SKEELP_FS_ID', '' );
-define( 'SKEELP_FS_PUBLIC_KEY', '' );
+define( 'SKEELP_FS_ID', '46049' );
+define( 'SKEELP_FS_PUBLIC_KEY', 'pk_694feb3c6f1d53ec6cc15e5e127de' );
 
 // --- START FREEMIUS INTEGRATION ---
 if ( ! function_exists( 'skeelp_fs' ) ) {
@@ -51,8 +50,7 @@ if ( ! function_exists( 'skeelp_fs' ) ) {
 			$skeelp_fs = fs_dynamic_init(
 				array(
 					'id'                  => SKEELP_FS_ID,
-					'slug'                => 'sitekeel',
-					'premium_slug'        => 'sitekeel-pro',
+					'slug'                => 'sitekeel-pro',
 					'type'                => 'plugin',
 					'public_key'          => SKEELP_FS_PUBLIC_KEY,
 					'is_premium'          => true,
