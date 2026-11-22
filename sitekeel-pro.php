@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Sitekeel Pro
  * Plugin URI:        https://cognitolab.net/products/sitekeel
- * Description:       Longer change history, CSV export and email alerts for important changes, for Sitekeel.
+ * Description:       CSV export and email alerts for important changes, for Sitekeel.
  * Version:           1.0.0
  * Requires at least: 6.3
  * Requires PHP:      7.4

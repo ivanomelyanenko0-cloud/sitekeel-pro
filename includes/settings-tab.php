@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return array
  */
 function skeelp_add_tab( $tabs ) {
-	$tabs['pro'] = __( 'History & alerts', 'sitekeel-pro' );
+	$tabs['pro'] = __( 'Alerts', 'sitekeel-pro' );
 	return $tabs;
 }
 add_filter( 'skeel_admin_tabs', 'skeelp_add_tab' );
@@ -30,10 +30,9 @@ function skeelp_handle_save() {
 
 	skeelp_update_settings(
 		array(
-			'retention_days' => isset( $_POST['retention_days'] ) ? absint( $_POST['retention_days'] ) : 365,
-			'alerts'         => ! empty( $_POST['alerts'] ),
-			'alert_email'    => isset( $_POST['alert_email'] ) ? sanitize_email( wp_unslash( $_POST['alert_email'] ) ) : '',
-			'alert_events'   => isset( $_POST['alert_events'] ) ? array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['alert_events'] ) ) : array(),
+			'alerts'       => ! empty( $_POST['alerts'] ),
+			'alert_email'  => isset( $_POST['alert_email'] ) ? sanitize_email( wp_unslash( $_POST['alert_email'] ) ) : '',
+			'alert_events' => isset( $_POST['alert_events'] ) ? array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['alert_events'] ) ) : array(),
 		)
 	);
 
@@ -68,29 +67,11 @@ function skeelp_render_tab() {
 	if ( isset( $messages[ $notice ] ) ) {
 		printf( '<div class="notice notice-%1$s is-dismissible"><p>%2$s</p></div>', esc_attr( $messages[ $notice ][0] ), esc_html( $messages[ $notice ][1] ) );
 	}
-	$labels = array(
-		90  => __( '90 days', 'sitekeel-pro' ),
-		180 => __( '6 months', 'sitekeel-pro' ),
-		365 => __( '1 year', 'sitekeel-pro' ),
-		730 => __( '2 years', 'sitekeel-pro' ),
-		0   => __( 'Keep everything', 'sitekeel-pro' ),
-	);
 	?>
 	<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 		<input type="hidden" name="action" value="skeelp_save" />
 		<?php wp_nonce_field( 'skeelp_save' ); ?>
 		<table class="form-table" role="presentation">
-			<tr>
-				<th scope="row"><label for="skeelp-retention"><?php esc_html_e( 'Keep changes for', 'sitekeel-pro' ); ?></label></th>
-				<td>
-					<select id="skeelp-retention" name="retention_days">
-						<?php foreach ( skeelp_retention_choices() as $days ) : ?>
-							<option value="<?php echo esc_attr( (string) $days ); ?>" <?php selected( (int) $settings['retention_days'], $days ); ?>><?php echo esc_html( $labels[ $days ] ); ?></option>
-						<?php endforeach; ?>
-					</select>
-					<p class="description"><?php esc_html_e( 'Changes older than this are removed once a day. The free plugin keeps 90 days.', 'sitekeel-pro' ); ?></p>
-				</td>
-			</tr>
 			<tr>
 				<th scope="row"><?php esc_html_e( 'Email alerts', 'sitekeel-pro' ); ?></th>
 				<td>
